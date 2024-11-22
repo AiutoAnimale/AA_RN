@@ -13,6 +13,10 @@ const SignupPage = ({navigation}) => {
     const [ btnState, setBtnState ] = useState(false);
     const [ sexState, setSexState ] = useState();
 
+    const onClickSignup = () => {
+        navigation.navigate("LoginPage", { screen: 'LoginPage'});
+    }
+
     return(
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <ScrollView>
@@ -36,7 +40,7 @@ const SignupPage = ({navigation}) => {
                             <Input text={"거주 지역"} state={'text'} innerText={'거주 지역을 입력해주세요'} />
                             <View style={Styles.margin}></View>
                         </View>
-                        <Button innerText={'회원가입하기'} state={btnState} />
+                        <Button innerText={'회원가입하기'} state={btnState} onPress={onClickSignup} />
                     </View>
                 </View>
             </ScrollView>

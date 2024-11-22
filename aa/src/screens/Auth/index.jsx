@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, TouchableWithoutFeedback, Keyboard, StyleSheet } from "react-native";
+import { View, TouchableWithoutFeedback, Keyboard, StyleSheet, TouchableOpacity } from "react-native";
 import { color } from "../../styles/theme";
 import constants from "../../styles/constants";
 import CustomText from "../../styles/customText";
@@ -11,6 +11,14 @@ const LoginPage = ({navigation}) => {
     const [ pwState, setPwState ] = useState(true);
     const [ btnState, setBtnState ] = useState(false);
 
+    const onClickLogin = () => {
+        navigation.navigate("MainScreen", { screen: 'MainScreen'});
+    }
+
+    const onClickSignup = () => {
+        navigation.navigate("SignupPage", { screen: 'SignupPage'});
+    }
+
     return(
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={Styles.container}>
@@ -21,7 +29,12 @@ const LoginPage = ({navigation}) => {
                         <Input text={"비밀번호"} state={'password'} innerText={'비밀번호를 입력해주세요'} pwState={pwState} onPress={() => setPwState(!pwState)} />
                         <View style={Styles.margin}></View>
                     </View>
-                    <Button innerText={'로그인하기'} state={btnState} />
+                    <View style={Styles.btnContainer}>
+                        <Button innerText={'로그인하기'} state={btnState} onPress={onClickLogin}/>
+                        <TouchableOpacity onPress={onClickSignup}>
+                            <CustomText style={Styles.signup}>회원가입 하러가기</CustomText>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         </TouchableWithoutFeedback>
@@ -55,6 +68,19 @@ const Styles = StyleSheet.create({
     },
     margin: {
         height: constants.height/6
+    },
+    signup: {
+        fontSize: 12,
+        fontWeight: '500',
+        color: color.Black,
+        width: constants.width/1.2,
+        textAlign: 'center',
+    },
+    btnContainer: {
+        display: 'flex',
+        rowGap: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
 
