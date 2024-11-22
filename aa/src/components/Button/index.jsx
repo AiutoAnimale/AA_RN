@@ -8,7 +8,7 @@ const Button = (props) => {
     const backgroundColor = props.state ? color.Orange[4] : color.Orange[1];
 
     return (
-        <TouchableOpacity style={[Styles.container, { backgroundColor }]}>
+        <TouchableOpacity style={[Styles.container, { backgroundColor }]} onPress={props.onPress}>
             <CustomText style={Styles.text}>{props.innerText}</CustomText>
         </TouchableOpacity>
     );

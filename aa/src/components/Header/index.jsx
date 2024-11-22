@@ -3,15 +3,13 @@ import { View, TouchableOpacity, StyleSheet } from "react-native";
 import { color } from "../../styles/theme";
 import constants from "../../styles/constants";
 
-import Logo from "../../assets/icon/Logo";
+import HeaderLogo from "../../assets/icon/HeaderLogo";
 
 const Header = ( props ) => {
 
     return(
         <View style={Styles.container}>
-            <View>
-                <Logo></Logo>
-            </View>
+            <HeaderLogo />
         </View>
     );
 }
@@ -21,7 +19,8 @@ const Styles = StyleSheet.create({
         width: constants.width,
         height: constants.height/20,
         alignItems: 'flex-start',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
+        paddingLeft: constants.width/18,
     },
 })
 
