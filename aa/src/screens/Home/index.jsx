@@ -10,8 +10,8 @@ import NO from "../../assets/icon/NO";
 import OK from "../../assets/icon/OK";
 
 const HomePage = ({ navigation }) => {
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [modalState, setModalState] = useState(false);
+    const [ isModalVisible, setModalVisible ] = useState(false);
+    const [ modalState, setModalState ] = useState(false);
 
     const handleAnswer = (isCorrect) => {
         setModalState(isCorrect);
