@@ -7,7 +7,7 @@ import constants from '../../styles/constants';
 
 import HomePage from "../../screens/Home";
 import CommunityScreen from "../CommunityScreen";
-import TimerPage from "../../screens/Timer";
+import TimerScreen from "../TimerScreen";
 import KnowingScreen from "../KnowingScreen";
 import MyScreen from "../MyScreen";
 
@@ -29,7 +29,7 @@ const MainScreen = () => {
 
     const getTabBarVisibility = (route) => {
         const routeName = getFocusedRouteNameFromRoute(route) ?? '';
-        if (['HomePage', 'CommunityScreen', 'TimerPage', 'KnowingScreen', 'MyScreen'].includes(routeName)) {
+        if (['HomePage', 'CommunityScreen', 'TimerScreen', 'KnowingScreen', 'MyScreen'].includes(routeName)) {
             return false;
         }
         return true;
@@ -38,14 +38,12 @@ const MainScreen = () => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
-                tabBarShowLabel: false,
-                tabBarHideOnKeyboard: true,
-                tabBarStyle: {
-                    height: constants.height / 10,
-                    display: getTabBarVisibility(route) ? 'flex' : 'none',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                },
+            tabBarShowLabel: false,
+            tabBarHideOnKeyboard: true,
+            tabBarStyle: {
+                display: getTabBarVisibility(route) ? 'flex' : 'none',
+                height: constants.height/12,
+            },
             })}
         >
             <Tab.Screen
@@ -67,8 +65,8 @@ const MainScreen = () => {
                 }}
             />
             <Tab.Screen
-                name="TimerPage"
-                component={TimerPage}
+                name="TimerScreen"
+                component={TimerScreen}
                 options={{
                     headerShown: false,
                     tabBarIcon: ({ focused }) =>
