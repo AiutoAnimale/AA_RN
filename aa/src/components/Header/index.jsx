@@ -17,10 +17,11 @@ const Header = ( props ) => {
 const Styles = StyleSheet.create({
     container: {
         width: constants.width,
-        height: constants.height/20,
+        height: constants.height/15,
         alignItems: 'flex-start',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         paddingLeft: constants.width/18,
+        paddingBottom: 10,
     },
 })
 
