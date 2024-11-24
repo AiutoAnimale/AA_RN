@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import CommunityMainPage from "../../screens/Community/Main";
 import DataPage from "../../screens/Community/Data";
+import CreatePage from "../../screens/Community/Create";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,7 @@ const KnowingScreen = () => {
         <Stack.Navigator initialRouteName="CommunityMainPage">
             <Stack.Screen name="CommunityMainPage" component={CommunityMainPage} options={{ headerShown: false }} />
             <Stack.Screen name="DataPage" component={DataPage} options={{ headerShown: false }} />
+            <Stack.Screen name="CreatePage" component={CreatePage} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }
