@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { color } from "../../styles/theme";
 import constants from "../../styles/constants";
@@ -9,9 +9,23 @@ import Q from "../../assets/icon/Q";
 import NO from "../../assets/icon/NO";
 import OK from "../../assets/icon/OK";
 
+import onWeather from '../../apis/weather';
+
 const HomePage = ({ navigation }) => {
     const [ isModalVisible, setModalVisible ] = useState(false);
     const [ modalState, setModalState ] = useState(false);
+    const [ weatherData, setWeatherData ] = useState();
+
+    useEffect(() => {
+        onGetWeather();
+    }, [])
+
+    const onGetWeather = async () => {
+        const data = await onWeather();
+        if(data) {
+            setWeatherData(data);
+        }
+    }
 
     const handleAnswer = (isCorrect) => {
         setModalState(isCorrect);
@@ -22,10 +36,9 @@ const HomePage = ({ navigation }) => {
         <View style={Styles.container}>
             <Header />
             <Image style={Styles.img} source={require('../../assets/image/weather.png')} />
-            <CustomText style={Styles.tag}>최저 24° | 최고 33° </CustomText>
-            <CustomText style={Styles.Top}>성남시 분당구의</CustomText>
+            <CustomText style={Styles.Top}>나주시 빛가람동의</CustomText>
             <CustomText style={Styles.Bottom}>오늘 날씨는 맑습니다</CustomText>
-            <CustomText style={Styles.temp}>24°</CustomText>
+            <CustomText style={Styles.temp}>{weatherData ? weatherData : undefined}°</CustomText>
             <CustomText style={Styles.data}>외출하기 좋은 날이에요!</CustomText>
             <View style={Styles.dataContainer}>
                 <View style={Styles.quizText}>
