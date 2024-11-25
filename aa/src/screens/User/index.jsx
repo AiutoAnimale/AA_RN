@@ -8,13 +8,53 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import Select from '../../components/Select';
 
+import onSignup from "../../apis/Signup";
+
 const SignupPage = ({navigation}) => {
     const [ pwState, setPwState ] = useState(true);
     const [ btnState, setBtnState ] = useState(false);
     const [ sexState, setSexState ] = useState();
+    const [ signupData, setSignupData ] = useState({
+		userid: "",
+		userpw: "",
+		nickname: "",
+		pet_name: "",
+		pet_sex: "",
+		species: "",
+		pet_birth: "",
+		region: "",
+    });
 
-    const onClickSignup = () => {
-        navigation.navigate("LoginPage", { screen: 'LoginPage'});
+    useEffect(()=> {
+        if(signupData.userid.length >= 1 && signupData.userid.length <= 50) {
+            if(signupData.userpw.length >= 1 && signupData.userpw.length <= 50) {
+                if(signupData.nickname.length >= 1 && signupData.nickname.length <= 50) {
+                    setBtnState(true);
+                }
+            }
+        }
+    },[signupData]);
+
+    const handleInputChange = (text, field) => {
+        setSignupData(prevData => ({
+          ...prevData,
+          [field]: text
+        }));
+      };
+
+    useEffect(() => {
+        if(sexState == '남아') {
+            handleInputChange("1", "pet_sex")
+        } else if(sexState == '여아') {
+            handleInputChange("0", "pet_sex")
+        }
+    }, [sexState])
+
+    const onClickSignup = async () => {
+        const signupState = await onSignup(signupData);
+        if(signupState) {
+            navigation.navigate("LoginPage", { screen: 'LoginPage'});
+        }
     }
 
     return(
@@ -24,11 +64,11 @@ const SignupPage = ({navigation}) => {
                     <View style={Styles.paddingContainer}>
                         <CustomText style={Styles.stateText}>회원가입하기</CustomText>
                         <View style={Styles.inputContainer}>
-                            <Input text={"아이디"} state={'text'} innerText={'아이디를 입력해주세요'} />
-                            <Input text={"비밀번호"} state={'password'} innerText={'비밀번호를 입력해주세요'} pwState={pwState} onPress={() => setPwState(!pwState)} />
-                            <Input text={"닉네임"} state={'text'} innerText={'닉네임을 입력해주세요'} />
-                            <Input text={"반려동물 이름"} state={'text'} innerText={'반려동물 이름을 입력해주세요'} />
-                            <Input text={"상세 종"} state={'text'} innerText={'상세 종을 입력해주세요'} />
+                            <Input text={"아이디"} state={'text'} innerText={'아이디를 입력해주세요'} onGetInText={(text) => handleInputChange(text, "userid")} />
+                            <Input text={"비밀번호"} state={'password'} innerText={'비밀번호를 입력해주세요'} pwState={pwState} onPress={() => setPwState(!pwState)} onGetInText={(text) => handleInputChange(text, "userpw")} />
+                            <Input text={"닉네임"} state={'text'} innerText={'닉네임을 입력해주세요'} onGetInText={(text) => handleInputChange(text, "nickname")} />
+                            <Input text={"반려동물 이름"} state={'text'} innerText={'반려동물 이름을 입력해주세요'} onGetInText={(text) => handleInputChange(text, "pet_name")}/>
+                            <Input text={"상세 종"} state={'text'} innerText={'상세 종을 입력해주세요'} onGetInText={(text) => handleInputChange(text, "species")}/>
                             <View style={Styles.textConatiner}>
                                 <CustomText style={Styles.text}>반려동물 성별</CustomText>
                                 <View style={Styles.btnContainer}>
@@ -36,8 +76,8 @@ const SignupPage = ({navigation}) => {
                                     <Select innerText={'남아'} state={sexState} onPress={() => setSexState('남아')} />
                                 </View>
                             </View>
-                            <Input text={"생년월일"} state={'text'} innerText={'반려동물 생년월일을 입력해주세요'} />
-                            <Input text={"거주 지역"} state={'text'} innerText={'거주 지역을 입력해주세요'} />
+                            <Input text={"생년월일"} state={'text'} innerText={'반려동물 생년월일을 입력해주세요'} onGetInText={(text) => handleInputChange(text, "pet_birth")}/>
+                            <Input text={"거주 지역"} state={'text'} innerText={'거주 지역을 입력해주세요'} onGetInText={(text) => handleInputChange(text, "region")}/>
                             <View style={Styles.margin}></View>
                         </View>
                         <Button innerText={'회원가입하기'} state={btnState} onPress={onClickSignup} />
