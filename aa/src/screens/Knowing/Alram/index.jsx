@@ -5,9 +5,22 @@ import constants from "../../../styles/constants";
 import CustomText from "../../../styles/customText";
 
 import Back from "../../../assets/icon/Back";
+import onGetAlramList from '../../../apis/GetAlramList';
 
 const AlramPage = ({navigation}) => {
     const [ searchData, setSearchData ] = useState('서울');
+    const [ listData, setListData ] = useState();
+
+    useEffect(()=> {
+        getAlram();
+    }, [searchData])
+
+    const getAlram = async () => {
+        const data = await onGetAlramList(searchData);
+        if(data) {
+            setListData(data);
+        }
+    }
 
     const onClickBack = () => {
         navigation.goBack()
@@ -30,20 +43,41 @@ const AlramPage = ({navigation}) => {
                     <TouchableOpacity onPress={() => setSearchData('서울')}>
                         <CustomText style={searchData=='서울' ? Styles.tag : Styles.noTag}>서울</CustomText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSearchData('경기도')}>
-                        <CustomText style={searchData=='경기도' ? Styles.tag : Styles.noTag}>경기도</CustomText>
+                    <TouchableOpacity onPress={() => setSearchData('경기')}>
+                        <CustomText style={searchData=='경기' ? Styles.tag : Styles.noTag}>경기도</CustomText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSearchData('충청도')}>
-                        <CustomText style={searchData=='충청도' ? Styles.tag : Styles.noTag}>충청도</CustomText>
+                    <TouchableOpacity onPress={() => setSearchData('충청')}>
+                        <CustomText style={searchData=='충청' ? Styles.tag : Styles.noTag}>충청도</CustomText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSearchData('전라도')}>
-                        <CustomText style={searchData=='전라도' ? Styles.tag : Styles.noTag}>전라도</CustomText>
+                    <TouchableOpacity onPress={() => setSearchData('전라')}>
+                        <CustomText style={searchData=='전라' ? Styles.tag : Styles.noTag}>전라도</CustomText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSearchData('강원도')}>
-                        <CustomText style={searchData=='강원도' ? Styles.tag : Styles.noTag}>강원도</CustomText>
+                    <TouchableOpacity onPress={() => setSearchData('강원')}>
+                        <CustomText style={searchData=='강원' ? Styles.tag : Styles.noTag}>강원도</CustomText>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => setSearchData('경상도')}>
-                        <CustomText style={searchData=='경상도' ? Styles.tag : Styles.noTag}>경상도</CustomText>
+                    <TouchableOpacity onPress={() => setSearchData('경상')}>
+                        <CustomText style={searchData=='경상' ? Styles.tag : Styles.noTag}>경상도</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('인천')}>
+                        <CustomText style={searchData=='인천' ? Styles.tag : Styles.noTag}>인천</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('대전')}>
+                        <CustomText style={searchData=='대전' ? Styles.tag : Styles.noTag}>대전</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('대구')}>
+                        <CustomText style={searchData=='대구' ? Styles.tag : Styles.noTag}>대구</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('부산')}>
+                        <CustomText style={searchData=='부산' ? Styles.tag : Styles.noTag}>부산</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('광주')}>
+                        <CustomText style={searchData=='광주' ? Styles.tag : Styles.noTag}>광주</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('울산')}>
+                        <CustomText style={searchData=='울산' ? Styles.tag : Styles.noTag}>울산</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setSearchData('세종')}>
+                        <CustomText style={searchData=='세종' ? Styles.tag : Styles.noTag}>세종</CustomText>
                     </TouchableOpacity>
                 </ScrollView>
                 <ScrollView>
