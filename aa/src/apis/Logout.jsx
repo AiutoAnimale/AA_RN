@@ -13,7 +13,7 @@ const onLogout = async ( ) => {
         const response = await axios.get(`${API_KEY}/users/logout`,
             {
             headers: {
-                authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
         
