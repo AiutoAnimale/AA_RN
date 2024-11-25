@@ -5,8 +5,22 @@ import constants from "../../../styles/constants";
 import CustomText from "../../../styles/customText";
 
 import Back from "../../../assets/icon/Back";
+import onGetUser from '../../../apis/GetUserInfo';
 
 const PetInfoPage = ({navigation}) => {
+    const [ userData, setUserData ] = useState();
+
+    useEffect(() => {
+        getUser();
+    }, [])
+
+    const getUser = async () => {
+        const data = await onGetUser();
+        if(data) {
+            console.log(data);
+            setUserData(data);
+        }
+    }
 
     const onClickBack = () => {
         navigation.goBack()
@@ -21,19 +35,19 @@ const PetInfoPage = ({navigation}) => {
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>이름</CustomText>
-                <CustomText style={Styles.optionText}>코코</CustomText>
+                <CustomText style={Styles.optionText}>{userData ? userData.pet_name : undefined}</CustomText>
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>세부 종</CustomText>
-                <CustomText style={Styles.optionText}>말티즈</CustomText>
+                <CustomText style={Styles.optionText}>{userData ? userData.species : undefined}</CustomText>
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>생년월일</CustomText>
-                <CustomText style={Styles.optionText}>2024. 07. 12</CustomText>
+                <CustomText style={Styles.optionText}>{userData ? userData.pet_birth : undefined}</CustomText>
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>성별</CustomText>
-                <CustomText style={Styles.optionText}>여아</CustomText>
+                <CustomText style={Styles.optionText}>{userData && userData.pet_sex == '0' ? '여아' : '남아'}</CustomText>
             </View>
         </View>
     );

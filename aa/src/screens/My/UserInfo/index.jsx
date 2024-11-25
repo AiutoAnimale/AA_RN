@@ -5,8 +5,22 @@ import constants from "../../../styles/constants";
 import CustomText from "../../../styles/customText";
 
 import Back from "../../../assets/icon/Back";
+import onGetUser from '../../../apis/GetUserInfo';
 
 const UserInfoPage = ({navigation}) => {
+    const [ userData, setUserData ] = useState();
+
+    useEffect(() => {
+        getUser();
+    }, [])
+
+    const getUser = async () => {
+        const data = await onGetUser();
+        if(data) {
+            console.log(data);
+            setUserData(data);
+        }
+    }
 
     const onClickBack = () => {
         navigation.goBack()
@@ -21,17 +35,17 @@ const UserInfoPage = ({navigation}) => {
             </View>
             <View style={Styles.option}>
                 <ImageBackground style={Styles.imgContainer} source={require('../../../assets/image/Level.png')}>
-                    <CustomText style={Styles.level}>LEVEL 1</CustomText>
+                    <CustomText style={Styles.level}>LEVEL {userData ? userData.level : undefined}</CustomText>
                 </ImageBackground>
                 <View></View>
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>닉네임</CustomText>
-                <CustomText style={Styles.optionText}>코코</CustomText>
+                <CustomText style={Styles.optionText}>{userData ? userData.nickname : undefined}</CustomText>
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>아이디</CustomText>
-                <CustomText style={Styles.optionText}>asdfasdf</CustomText>
+                <CustomText style={Styles.optionText}>{userData ? userData.userid : undefined}</CustomText>
             </View>
             <View style={Styles.option}>
                 <CustomText style={Styles.title}>비밀번호</CustomText>
