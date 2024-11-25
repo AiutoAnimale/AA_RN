@@ -7,7 +7,21 @@ import CustomText from "../../../styles/customText";
 import Search from "../../../assets/icon/Search";
 import Create from "../../../assets/icon/Create";
 
+import onGetList from "../../../apis/GetList";
+
 const MainPage = ({navigation}) => {
+    const [ listData, setListData ] = useState();
+
+    useEffect(() => {
+        getData();
+    }, [])
+
+    const getData = async () => {
+        const data = onGetList();
+        if(data) {
+            setListData(data);
+        }
+    }
 
     const onClickData = () => {
         navigation.navigate("DataPage", { screen: 'DataPage'});
@@ -35,83 +49,20 @@ const MainPage = ({navigation}) => {
                         <Create />
                 </TouchableOpacity>
                 <ScrollView style={Styles.body}>
-                    <TouchableOpacity style={Styles.dataContainer} onPress={onClickData}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
+                    {/* {listData ? listData.map((item, index) => {
+                        <TouchableOpacity style={Styles.dataContainer} onPress={onClickData}>
+                            <View style={Styles.left}>
+                                <CustomText style={Styles.tag}>#일상</CustomText>
+                                <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
+                                <View style={Styles.bottom}>
+                                    <CustomText style={Styles.data}>이름</CustomText>
+                                    <CustomText style={Styles.data}>댓글 20</CustomText>
+                                </View>
                             </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Styles.dataContainer}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
-                            </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Styles.dataContainer}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
-                            </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Styles.dataContainer}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
-                            </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Styles.dataContainer}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
-                            </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Styles.dataContainer}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
-                            </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={Styles.dataContainer}>
-                        <View style={Styles.left}>
-                            <CustomText style={Styles.tag}>#일상</CustomText>
-                            <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
-                            <View style={Styles.bottom}>
-                                <CustomText style={Styles.data}>이름</CustomText>
-                                <CustomText style={Styles.data}>댓글 20</CustomText>
-                            </View>
-                        </View>
-                        <Image style={Styles.img} />
-                    </TouchableOpacity>
+                            <Image style={Styles.img} />
+                        </TouchableOpacity>
+                        }
+                    ) : <></>} */}
                 </ScrollView>
             </View>
         </TouchableWithoutFeedback>
