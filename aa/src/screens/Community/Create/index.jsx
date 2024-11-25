@@ -8,17 +8,32 @@ import constants from "../../../styles/constants";
 
 import ImageIcon from "../../../assets/icon/ImageIcon";
 import Back from '../../../assets/icon/Back';
-import Button from "../../../components/Button";
+
+import onPostList from '../../../apis/PostList';
+import onCommunityPostImage from "../../../apis/PostImg";
 
 const CreatePage = ({navigation}) => {
     const [ postData, setPostData ] = useState({
+        nickname: "",
         title: "",
-        content: "",
+        body: "",
         tag: "",
+        emergency: "0"
     });
     const [ postState, setPostState ] = useState(false);
     const [imageData, setImageData] = useState();
     const formData = new FormData();
+
+    const onClickCreate = async () => {
+        if(postData.tag == '실종') {
+            setPostData({ ...postData, emergency: "1" });
+        }
+
+        const data = await onPostList(postData);
+        if(data) {
+            onImageUpload(data);
+        }
+    }
 
     const onClickEdit = async () => {
         try {
@@ -48,7 +63,7 @@ const CreatePage = ({navigation}) => {
             const data = await onCommunityPostImage(formData, id);
 
             if(data) {
-                navigation.navigate("MainPage", { screen: 'MainPage' });
+                navigation.navigate("CommunityMainPage", { screen: 'CommunityMainPage' });
             }
         } catch (error) {
         }
@@ -56,7 +71,7 @@ const CreatePage = ({navigation}) => {
 
     useEffect(() => {
         if(postData.title.length >= 1 && postData.title.length <= 25) {
-            if(postData.content.length >= 1 && postData.content.length <= 2000) {
+            if(postData.body.length >= 1 && postData.body.length <= 2000) {
                 setPostState(true);
             }
         }
@@ -73,8 +88,8 @@ const CreatePage = ({navigation}) => {
                     <TouchableOpacity onPress={onClickBack}>
                         <Back />
                     </TouchableOpacity>
-                    <TouchableOpacity style={Styles.btn}>
-                        <CustomText style={Styles.btnFont}>생성</CustomText>
+                    <TouchableOpacity onPress={onClickCreate} style={[Styles.btn, {backgroundColor: postState ? color.Orange[4] : color.Gray[0]}]}>
+                        <CustomText style={[Styles.btnFont, {color: postState ? color.White : color.Gray[8]}]}>생성</CustomText>
                     </TouchableOpacity>
                 </View>
                 <ScrollView>
@@ -96,7 +111,7 @@ const CreatePage = ({navigation}) => {
                             placeholderTextColor={color.Gray[3]}
                             textAlignVertical="top"
                             value={postData.content}
-                            onChangeText={(text) => setPostData({ ...postData, content: text })}
+                            onChangeText={(text) => setPostData({ ...postData, body: text })}
                         />
                     </View>
                     <View style={Styles.fontContainer}>
