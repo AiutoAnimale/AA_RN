@@ -13,9 +13,25 @@ import HeaderLogo from "../../../assets/icon/HeaderLogo";
 import X from "../../../assets/icon/X";
 import PetImg from "../../../assets/icon/PetImg";
 
+import onLogout from '../../../apis/Logout';
+import onGetUser from "../../../apis/GetUserInfo";
+
 const MainPage = ({navigation}) => {
     const [ isLogout, setIsLogout ] = useState(false);
     const [ isPetData, setIsPetData ] = useState(false);
+    const [ userData, setUserData ] = useState();
+
+    useEffect(() => {
+        getUser();
+    }, [])
+
+    const getUser = async () => {
+        const data = await onGetUser();
+        if(data) {
+            console.log(data);
+            setUserData(data);
+        }
+    }
 
     const onClickPetInfo = () => {
         navigation.navigate("PetInfoPage", { screen: 'PetInfoPage'});
@@ -31,6 +47,13 @@ const MainPage = ({navigation}) => {
 
     const onClickLogout = () => {
         setIsLogout(true);
+    }
+
+    const onClickLogoutAPI = async () => {
+        const logoutState = await onLogout();
+        if(logoutState) {
+            navigation.navigate("LoginPage", { screen: 'LoginPage'});
+        }
     }
 
     return(
@@ -75,18 +98,18 @@ const MainPage = ({navigation}) => {
                         </View>
                         <View style={Styles.flex}>
                             <View style={Styles.row}>
-                                <CustomText style={Styles.petName}>코코</CustomText>
-                                <CustomText style={Styles.petBreed}>말티즈</CustomText>
+                                <CustomText style={Styles.petName}>{userData ? userData.pet_name : undefined}</CustomText>
+                                <CustomText style={Styles.petBreed}>{userData ? userData.species : undefined}</CustomText>
                             </View>
                             <PetImg />
                         </View>
                         <View style={Styles.row}>
                             <CustomText style={Styles.petBreed}>생년월일</CustomText>
-                            <CustomText style={Styles.petInfo}>2024.07.12</CustomText>
+                            <CustomText style={Styles.petInfo}>{userData ? userData.pet_birth : undefined}</CustomText>
                         </View>
                         <View style={Styles.row}>
                             <CustomText style={Styles.petBreed}>성별</CustomText>
-                            <CustomText style={Styles.petInfo}>여아</CustomText>
+                            <CustomText style={Styles.petInfo}>{userData && userData.pet_sex == '0' ? '여아' : '남아'}</CustomText>
                         </View>
                         <View style={Styles.center}>
                             <HeaderLogo />
@@ -116,7 +139,7 @@ const MainPage = ({navigation}) => {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 style={Styles.modalButton}
-                                onPress={() => setIsLogout(false)}
+                                onPress={() => onClickLogoutAPI()}
                             >
                                 <CustomText style={Styles.modalButtonText}>확인</CustomText>
                             </TouchableOpacity>
