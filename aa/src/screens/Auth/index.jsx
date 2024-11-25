@@ -7,12 +7,36 @@ import CustomText from "../../styles/customText";
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
+import onLogin from "../../apis/Login";
+
 const LoginPage = ({navigation}) => {
     const [ pwState, setPwState ] = useState(true);
     const [ btnState, setBtnState ] = useState(false);
+    const [ loginData, setLoginData ] = useState({
+		userid: "",
+		userpw: ""
+    });
 
-    const onClickLogin = () => {
-        navigation.navigate("MainScreen", { screen: 'MainScreen'});
+    useEffect(()=> {
+        if(loginData.userid.length >= 5 && loginData.userid.length <= 24) {
+            if(loginData.userpw.length >= 5 && loginData.userpw.length <= 40) {
+                setBtnState(true);
+            }
+        }
+    },[loginData]);
+
+    const handleInputChange = (text, field) => {
+        setLoginData(prevData => ({
+          ...prevData,
+          [field]: text
+        }));
+    };
+
+    const onClickLogin = async () => {
+        const loginState = await onLogin(loginData);
+        if(loginState) {
+            navigation.navigate("MainScreen", { screen: 'MainScreen'});
+        }
     }
 
     const onClickSignup = () => {
@@ -25,8 +49,8 @@ const LoginPage = ({navigation}) => {
                 <View style={Styles.paddingContainer}>
                     <CustomText style={Styles.stateText}>로그인하기</CustomText>
                     <View style={Styles.inputContainer}>
-                        <Input text={"아이디"} state={'text'} innerText={'아이디를 입력해주세요'} />
-                        <Input text={"비밀번호"} state={'password'} innerText={'비밀번호를 입력해주세요'} pwState={pwState} onPress={() => setPwState(!pwState)} />
+                        <Input text={"아이디"} state={'text'} innerText={'아이디를 입력해주세요'} onGetInText={(text) => handleInputChange(text, "userid")} />
+                        <Input text={"비밀번호"} state={'password'} innerText={'비밀번호를 입력해주세요'} pwState={pwState} onPress={() => setPwState(!pwState)} onGetInText={(text) => handleInputChange(text, "userpw")} />
                         <View style={Styles.margin}></View>
                     </View>
                     <View style={Styles.btnContainer}>
