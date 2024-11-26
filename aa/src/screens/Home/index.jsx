@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Image, Modal, StyleSheet, TouchableOpacity } from "react-native";
 import { color } from "../../styles/theme";
 import constants from "../../styles/constants";
@@ -9,6 +10,8 @@ import Q from "../../assets/icon/Q";
 import NO from "../../assets/icon/NO";
 import OK from "../../assets/icon/OK";
 
+import { getStorage, setStorage, removeStorage } from "../../utils/Storage";
+
 import onWeather from '../../apis/weather';
 
 const HomePage = ({ navigation }) => {
@@ -16,9 +19,11 @@ const HomePage = ({ navigation }) => {
     const [ modalState, setModalState ] = useState(false);
     const [ weatherData, setWeatherData ] = useState();
 
-    useEffect(() => {
-        onGetWeather();
-    }, [])
+    useFocusEffect(
+        useCallback(() => {
+            onGetWeather();
+        }, [])
+    );
 
     const onGetWeather = async () => {
         const data = await onWeather();
@@ -84,7 +89,7 @@ const HomePage = ({ navigation }) => {
                     <View style={Styles.modalContent}>
                         {modalState ? <OK /> : <NO />}
                         <CustomText style={Styles.modalText}>
-                            {modalState ? "정답이에요! 날카로운 통찰력에 감탄했어요!" : "정답은 ~이예요!"}
+                            {modalState ? "정답이에요!" : "틀렸어요~ 내일 다시 도전해보세요!"}
                         </CustomText>
                         <TouchableOpacity
                             style={Styles.modalButton}
