@@ -7,7 +7,7 @@ const onPostList = async ( data ) => {
     const result = await getStorage('token');
     const token = result && JSON.parse(result);
 
-    console.log(data)
+    //console.log(data)
 
     try {
         const response = await axios.post(`${API_KEY}/feeds/WriteFeed`, {
