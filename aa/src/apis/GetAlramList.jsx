@@ -7,7 +7,7 @@ const onGetAlramList = async ( data ) => {
     const result = await getStorage('token');
     const token = result && JSON.parse(result);
 
-    console.log(token)
+    //console.log(token)
 
     try {
         const response = await axios.post(`${API_KEY}/vets/searchVet`,{
@@ -20,7 +20,7 @@ const onGetAlramList = async ( data ) => {
         });
         
         if(response.status == 200) {
-            console.log(response.data);
+            //console.log(response.data);
             return response.data;
         }
     } catch (error) {

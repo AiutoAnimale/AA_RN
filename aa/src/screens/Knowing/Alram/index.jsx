@@ -8,8 +8,15 @@ import Back from "../../../assets/icon/Back";
 import onGetAlramList from '../../../apis/GetAlramList';
 
 const AlramPage = ({navigation}) => {
+    const [ isLoading, setIsLoading ] = useState(false);
     const [ searchData, setSearchData ] = useState('서울');
     const [ listData, setListData ] = useState();
+
+    useEffect(()=>{
+        if(listData != null) {
+            setIsLoading(true);
+        }
+    }, [listData])
 
     useEffect(()=> {
         getAlram();
@@ -80,19 +87,23 @@ const AlramPage = ({navigation}) => {
                         <CustomText style={searchData=='세종' ? Styles.tag : Styles.noTag}>세종</CustomText>
                     </TouchableOpacity>
                 </ScrollView>
-                <ScrollView>
-                    <View style={Styles.dataContainer}>
-                        <CustomText style={Styles.shap}>#동물병원</CustomText>
-                        <CustomText style={Styles.text}>00 동물병원</CustomText>
-                        <View style={Styles.bottom}>
-                            <CustomText style={Styles.data}>위치</CustomText>
-                            <CustomText style={Styles.data}>대전광역시 ㅁㄴㅇㄹㄴㅇㅁㄹㄴㅇㄹ</CustomText>
+                <ScrollView style={Styles.list}>
+                    {isLoading && listData.map((item, index) => {
+                        if(index >= 30) return null;
+                        return (
+                        <View style={Styles.dataContainer} key={index}>
+                            <CustomText style={Styles.shap}>#동물병원</CustomText>
+                            <CustomText style={Styles.text}>{item.name}</CustomText>
+                            <View style={Styles.bottom}>
+                                <CustomText style={Styles.data}>위치</CustomText>
+                                <CustomText style={Styles.data}>{item.location}</CustomText>
+                            </View>
+                            <View style={Styles.bottom}>
+                                <CustomText style={Styles.data}>연락처</CustomText>
+                                <CustomText style={Styles.data}>{item.phone}</CustomText>
+                            </View>
                         </View>
-                        <View style={Styles.bottom}>
-                            <CustomText style={Styles.data}>연락처</CustomText>
-                            <CustomText style={Styles.data}>052-0000-0000</CustomText>
-                        </View>
-                    </View>
+                    )})}
                 </ScrollView>
             </View>
         </View>
@@ -114,6 +125,9 @@ const Styles = StyleSheet.create({
         justifyContent:'flex-end',
         paddingBottom: 10,
         paddingLeft: 15,
+    },
+    list: {
+        height: constants.height/1.5,
     },
     body:{
         width: constants.width/1.1,
