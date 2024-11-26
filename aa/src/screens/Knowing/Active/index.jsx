@@ -5,9 +5,31 @@ import constants from "../../../styles/constants";
 import CustomText from "../../../styles/customText";
 
 import Back from "../../../assets/icon/Back";
+import onGetActs from '../../../apis/GetActs';
 
 const ActivePage = ({navigation}) => {
     const [ searchData, setSearchData ] = useState('강아지');
+    const [ data, setData ] = useState();
+
+    useEffect(()=>{
+        onGetData('1');
+    }, [])
+
+    useEffect(()=>{
+        if(searchData == '강아지') {
+            onGetData('1');
+        } else if(searchData == '고양이') {
+            onGetData('2');
+        }
+    }, [searchData])
+
+    const onGetData = async (id) => {
+        const res = await onGetActs(id);
+        if(res) {
+            console.log(res[0]);
+            setData(res[0]);
+        }
+    }
 
     const onClickBack = () => {
         navigation.goBack()
@@ -46,7 +68,8 @@ const ActivePage = ({navigation}) => {
                         <CustomText style={searchData=='물고기' ? Styles.tag : Styles.noTag}>물고기</CustomText>
                     </TouchableOpacity>
                 </ScrollView>
-                <CustomText style={Styles.data}>강아지가 초콜릿을 먹었을 때는 민어리ㅏㄴ어리마ㅓㄴ이ㅏ러ㅏ님어를 하세요~</CustomText>
+                <CustomText style={Styles.data}>{data ? data.title : undefined}</CustomText>
+                <CustomText style={Styles.data}>{data ? data.body : undefined}</CustomText>
             </View>
         </View>
     );
