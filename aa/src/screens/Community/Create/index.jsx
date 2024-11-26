@@ -38,6 +38,10 @@ const CreatePage = ({navigation}) => {
     }
 
     useEffect(()=>{
+        console.log(postData);
+    },[postData])
+
+    useEffect(()=>{
         if(userData) {
             console.log(userData.nickname);
             setPostData({ ...postData, nickname: userData.nickname });
@@ -46,7 +50,7 @@ const CreatePage = ({navigation}) => {
 
     const onClickCreate = async () => {
         if(postData.tag == '실종') {
-            setPostData({ ...postData, emergency: "1" });
+            setPostData({ ...postData, emergency: 1 });
         }
 
         const data = await onPostList(postData);

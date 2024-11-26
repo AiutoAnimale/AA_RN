@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, TouchableWithoutFeedback, Keyboard, Image, StyleSheet, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { color } from "../../../styles/theme";
 import constants from "../../../styles/constants";
@@ -8,23 +9,46 @@ import Search from "../../../assets/icon/Search";
 import Create from "../../../assets/icon/Create";
 
 import onGetList from "../../../apis/GetList";
+import onSearchList from '../../../apis/SearchList';
 
 const MainPage = ({navigation}) => {
+    const [ isLoading, setIsLoading ] = useState(false);
     const [ listData, setListData ] = useState();
+    const [ searchData, setSearchData ] = useState();
+
+    useEffect(()=>{
+        if(listData != null) {
+            setIsLoading(true);
+        }
+    }, [listData])
 
     useEffect(() => {
-        getData();
-    }, [])
+        console.log(searchData);
+        onGetSearchList();
+    }, [searchData])
 
-    const getData = async () => {
-        const data = onGetList();
+    const onGetSearchList = async () => {
+        const data = await onSearchList(searchData);
         if(data) {
             setListData(data);
         }
     }
 
-    const onClickData = () => {
-        navigation.navigate("DataPage", { screen: 'DataPage'});
+    useFocusEffect(
+        useCallback(() => {
+            getData();
+        }, [])
+    );
+
+    const getData = async () => {
+        const data = await onGetList();
+        if(data) {
+            setListData(data);
+        }
+    }
+
+    const onClickData = (item) => {
+        navigation.navigate("DataPage", { screen: 'DataPage', data: item});
     }
 
     const onClickCreate = () => {
@@ -37,7 +61,12 @@ const MainPage = ({navigation}) => {
                 <View style={Styles.header}>
                     <View style={Styles.inputContainer}>
                         <Search />
-                        <TextInput style={Styles.input} placeholder='검색어를 입력하세요'/>
+                        <TextInput
+                            style={Styles.input}
+                            placeholder="검색어를 입력하세요"
+                            returnKeyType="done"
+                            onSubmitEditing={(event) => setSearchData(event.nativeEvent.text)}
+                        />
                     </View>
                 </View>
                 <TouchableOpacity
@@ -49,20 +78,21 @@ const MainPage = ({navigation}) => {
                         <Create />
                 </TouchableOpacity>
                 <ScrollView style={Styles.body}>
-                    {/* {listData ? listData.map((item, index) => {
-                        <TouchableOpacity style={Styles.dataContainer} onPress={onClickData}>
+                    {isLoading ? listData.map((item, index) => {
+                        if(index >= 20) return null;
+                        return (
+                        <TouchableOpacity style={Styles.dataContainer} onPress={() => onClickData(item)} key={index}>
                             <View style={Styles.left}>
-                                <CustomText style={Styles.tag}>#일상</CustomText>
-                                <CustomText style={Styles.text}>우리 애 오늘 쩔었다</CustomText>
+                                <CustomText style={Styles.tag}>{item.emergency == 1 ? "#실종" : "#일상"}</CustomText>
+                                <CustomText style={Styles.text}>{item.title}</CustomText>
                                 <View style={Styles.bottom}>
-                                    <CustomText style={Styles.data}>이름</CustomText>
-                                    <CustomText style={Styles.data}>댓글 20</CustomText>
+                                    <CustomText style={Styles.data}>{item.nickname}</CustomText>
                                 </View>
                             </View>
                             <Image style={Styles.img} />
                         </TouchableOpacity>
-                        }
-                    ) : <></>} */}
+                    )}
+                    ) : <></>}
                 </ScrollView>
             </View>
         </TouchableWithoutFeedback>

@@ -5,12 +5,26 @@ import constants from "../../../styles/constants";
 import CustomText from "../../../styles/customText";
 
 import Back from '../../../assets/icon/Back';
+import onPostComment from "../../../apis/PostComment";
 
-const DataPage = ({navigation}) => {
-    const [ isData, setIsData ] = useState(true);
+const DataPage = ({navigation, route}) => {
+    const [ isData, setIsData ] = useState(false);
+    const [ comment, setComment ] = useState();
+    const data = route.params.data;
+
+    useEffect(()=>{
+        console.log(comment)
+    },[comment])
 
     const onClickBack = () => {
         navigation.goBack()
+    }
+
+    const onClickPost = async () => {
+        const data = await onPostComment(comment);
+        if(data) {
+            console.log(data)
+        }
     }
 
     return(
@@ -24,25 +38,19 @@ const DataPage = ({navigation}) => {
                 <ScrollView>
                     <View style={Styles.main}>
                         <View style={Styles.body}>
-                            <CustomText style={Styles.name}>이름</CustomText>
+                            <CustomText style={Styles.name}>{data.nickname}</CustomText>
                             <Image style={Styles.img} />
-                            <CustomText style={Styles.title}>팔 뻗는것봐 너무 귀여워!</CustomText>
+                            <CustomText style={Styles.title}>{data.title}</CustomText>
                             <CustomText style={Styles.data}>
-                                안녕하세요, 여러분! 🐶💕{'\n'}
-                                오늘 아침, 우리 강아지가 팔을 쭉 뻗는 모습이 너무 귀여워서 사진을 찍어봤어요!{'\n'}
-                                이 모습은 마치 "안아줘!"라고 말하는 것 같아요. 😍{'\n'}
-                                이런 작은 순간들이 하루를 더욱 특별하게 만들어주네요.{'\n'}
-                                여러분의 반려동물도 이런 사랑스러운 순간이 있나요?{'\n'}
-                                댓글로 공유해주세요! 🐾{'\n'}
-                                행복한 하루 보내세요!
+                                {data.body}
                             </CustomText>
                         </View>
                         <View style={Styles.gap}></View>
                         <View style={Styles.body}>
                             <CustomText style={Styles.title}>댓글</CustomText>
                             <View style={Styles.btnContainer}>
-                                <TextInput style={Styles.input} placeholder='댓글 작성하기' />
-                                <TouchableOpacity style={Styles.btn}>
+                                <TextInput style={Styles.input} placeholder='댓글 작성하기' onSubmitEditing={(event) => setComment(event.nativeEvent.text)}/>
+                                <TouchableOpacity style={Styles.btn} onPress={onClickPost}>
                                     <CustomText style={Styles.btnFont}>등록</CustomText>
                                 </TouchableOpacity>
                             </View>
