@@ -7,7 +7,7 @@ const onGetUser = async ( ) => {
     const result = await getStorage('token');
     const token = result && JSON.parse(result);
 
-    console.log(token)
+    //console.log(token)
 
     try {
         const response = await axios.get(`${API_KEY}/users/info`,
