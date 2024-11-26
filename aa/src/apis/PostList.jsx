@@ -4,7 +4,10 @@ import { getStorage, setStorage, removeStorage } from "../utils/Storage";
 
 const onPostList = async ( data ) => {
 
-    console.log(API_KEY);
+    const result = await getStorage('token');
+    const token = result && JSON.parse(result);
+
+    console.log(data)
 
     try {
         const response = await axios.post(`${API_KEY}/feeds/WriteFeed`, {
@@ -22,7 +25,7 @@ const onPostList = async ( data ) => {
         if(response.status == 201) {
             console.log("게시글 생성에 성공하였습니다.");
             console.log(response.data);
-            return response.data;
+            return response.data.feedId;
         }
     } catch (error) {
         if (error.response) {

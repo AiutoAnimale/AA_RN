@@ -11,6 +11,7 @@ import Back from '../../../assets/icon/Back';
 
 import onPostList from '../../../apis/PostList';
 import onCommunityPostImage from "../../../apis/PostImg";
+import onGetUser from "../../../apis/GetUserInfo";
 
 const CreatePage = ({navigation}) => {
     const [ postData, setPostData ] = useState({
@@ -23,6 +24,25 @@ const CreatePage = ({navigation}) => {
     const [ postState, setPostState ] = useState(false);
     const [imageData, setImageData] = useState();
     const formData = new FormData();
+    const [ userData, setUserData ] = useState();
+
+    useEffect(() => {
+        getUser();
+    }, [])
+
+    const getUser = async () => {
+        const data = await onGetUser();
+        if(data) {
+            setUserData(data);
+        }
+    }
+
+    useEffect(()=>{
+        if(userData) {
+            console.log(userData.nickname);
+            setPostData({ ...postData, nickname: userData.nickname });
+        }
+    }, [userData])
 
     const onClickCreate = async () => {
         if(postData.tag == '실종') {
@@ -31,6 +51,7 @@ const CreatePage = ({navigation}) => {
 
         const data = await onPostList(postData);
         if(data) {
+            console.log(data);
             onImageUpload(data);
         }
     }
@@ -58,6 +79,8 @@ const CreatePage = ({navigation}) => {
         } else {
             formData.append("image", "");
         }
+
+        console.log('image upload')
 
         try {
             const data = await onCommunityPostImage(formData, id);
