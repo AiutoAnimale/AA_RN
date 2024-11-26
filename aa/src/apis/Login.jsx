@@ -4,7 +4,7 @@ import { getStorage, setStorage, removeStorage } from "../utils/Storage";
 
 const onLogin = async ( data ) => {
 
-    console.log(API_KEY);
+    //console.log(API_KEY);
 
     try {
         const response = await axios.post(`${API_KEY}/users/login`, {
