@@ -28,9 +28,11 @@ const MainPage = ({navigation}) => {
     }, [searchData])
 
     const onGetSearchList = async () => {
-        const data = await onSearchList(searchData);
-        if(data) {
-            setListData(data);
+        if(searchData != null) {
+            const data = await onSearchList(searchData);
+            if(data) {
+                setListData(data);
+            }
         }
     }
 

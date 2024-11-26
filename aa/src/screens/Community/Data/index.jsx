@@ -6,24 +6,41 @@ import CustomText from "../../../styles/customText";
 
 import Back from '../../../assets/icon/Back';
 import onPostComment from "../../../apis/PostComment";
+import onGetComment from '../../../apis/GetComment';
 
 const DataPage = ({navigation, route}) => {
     const [ isData, setIsData ] = useState(false);
+    const [ commentList, setCommentList ] = useState();
     const [ comment, setComment ] = useState();
     const data = route.params.data;
 
     useEffect(()=>{
-        console.log(comment)
-    },[comment])
+        onGet();
+    }, [])
+
+    useEffect(()=>{
+        if(commentList != null) {
+            setIsData(true);
+        }
+    }, [commentList])
+
+    const onGet = async() => {
+        const res = await onGetComment(data.idx);
+        if(res) {
+            console.log(res);
+            setCommentList(res);
+        }
+    }
 
     const onClickBack = () => {
         navigation.goBack()
     }
 
     const onClickPost = async () => {
-        const data = await onPostComment(comment);
-        if(data) {
-            console.log(data)
+        const res = await onPostComment(comment, data.idx);
+
+        if(res) {
+            console.log(res)
         }
     }
 
@@ -54,38 +71,20 @@ const DataPage = ({navigation, route}) => {
                                     <CustomText style={Styles.btnFont}>등록</CustomText>
                                 </TouchableOpacity>
                             </View>
-                            {isData ? 
-                            (
-                                <>
-                                    <View style={Styles.commentContainer}>
+                            {isData ? commentList.map((item, index) => {
+                                if(index >= 20) return null;
+                                return (
+                                    <View style={Styles.commentContainer} key={index}>
                                         <Image style={Styles.commentImg} />
                                         <View style={Styles.comment}>
-                                            <CustomText style={[Styles.name, {fontWeight: '700'}]}>이름</CustomText>
+                                            <CustomText style={[Styles.name, {fontWeight: '700'}]}>{item.nickname}</CustomText>
                                             <CustomText style={Styles.data}>
-                                                이 사진은 이~븐하게 찍히지 않았네요 ~ {'\n'}
-                                                당신의 카메라 화질은 좀 부족한거 같아요{'\n'}
-                                                카메라는 보류입니다.{'\n'}
-                                                하지만 강아지는 너무 귀엽고?
+                                                {item.body}
                                             </CustomText>
                                         </View>
                                     </View>
-                                    <View style={Styles.commentContainer}>
-                                        <Image style={Styles.commentImg} />
-                                        <View style={Styles.comment}>
-                                            <CustomText style={[Styles.name, {fontWeight: '700'}]}>이름</CustomText>
-                                            <CustomText style={Styles.data}>
-                                                이 사진은 이~븐하게 찍히지 않았네요 ~ {'\n'}
-                                                당신의 카메라 화질은 좀 부족한거 같아요{'\n'}
-                                                카메라는 보류입니다.{'\n'}
-                                                하지만 강아지는 너무 귀엽고?
-                                            </CustomText>
-                                        </View>
-                                    </View>
-                                </>
-                                
-                            ) : (
-                                <CustomText style={Styles.noComment}>댓글이 없습니다.</CustomText>
-                            )}
+                                )}
+                            ) : <CustomText style={Styles.noComment}>댓글이 없습니다.</CustomText>}
                         </View>
                     </View>
                 </ScrollView>
