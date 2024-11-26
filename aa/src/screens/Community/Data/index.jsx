@@ -56,7 +56,6 @@ const DataPage = ({navigation, route}) => {
                     <View style={Styles.main}>
                         <View style={Styles.body}>
                             <CustomText style={Styles.name}>{data.nickname}</CustomText>
-                            <Image style={Styles.img} />
                             <CustomText style={Styles.title}>{data.title}</CustomText>
                             <CustomText style={Styles.data}>
                                 {data.body}
@@ -75,7 +74,6 @@ const DataPage = ({navigation, route}) => {
                                 if(index >= 20) return null;
                                 return (
                                     <View style={Styles.commentContainer} key={index}>
-                                        <Image style={Styles.commentImg} />
                                         <View style={Styles.comment}>
                                             <CustomText style={[Styles.name, {fontWeight: '700'}]}>{item.nickname}</CustomText>
                                             <CustomText style={Styles.data}>

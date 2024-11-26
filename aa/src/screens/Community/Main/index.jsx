@@ -91,7 +91,6 @@ const MainPage = ({navigation}) => {
                                     <CustomText style={Styles.data}>{item.nickname}</CustomText>
                                 </View>
                             </View>
-                            <Image style={Styles.img} />
                         </TouchableOpacity>
                     )}
                     ) : <></>}
