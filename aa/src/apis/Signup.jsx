@@ -3,7 +3,7 @@ import { API_KEY } from "@env";
 
 const onSignup = async ( data ) => {
 
-    console.log(data);
+    //console.log(data);
 
     try {
         const response = await axios.post(`${API_KEY}/users/signup`, {
@@ -24,7 +24,8 @@ const onSignup = async ( data ) => {
     } catch (error) {
         if (error.response) {
             if (error.response.status === 400) {
-              console.log('signup : 요청에 실패했습니다');
+                console.log(error.response.data);
+                console.log('signup : 요청에 실패했습니다');
             } else if (error.response.status === 409) {
               console.log('signup : 중복된 아이디입니다');
             }
