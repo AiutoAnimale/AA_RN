@@ -11,30 +11,68 @@ import NO from "../../assets/icon/NO";
 import OK from "../../assets/icon/OK";
 
 import { getStorage, setStorage, removeStorage } from "../../utils/Storage";
-
+import onGetMission from '../../apis/GetMissions';
+import onMissionCheck from "../../apis/MissionCheck";
 import onWeather from '../../apis/weather';
 
 const HomePage = ({ navigation }) => {
-    const [ isModalVisible, setModalVisible ] = useState(false);
-    const [ modalState, setModalState ] = useState(false);
-    const [ weatherData, setWeatherData ] = useState();
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [modalState, setModalState] = useState(false);
+    const [weatherData, setWeatherData] = useState();
+    const [isQuiz, setIsQuiz] = useState(false);
+    const [quizData, setQuizData] = useState();
 
     useFocusEffect(
         useCallback(() => {
             onGetWeather();
+            checkQuizStatus();
         }, [])
     );
 
+    useEffect(() => {
+        if (!isQuiz) {
+            getMission();
+        }
+    }, [isQuiz]);
+
+    const checkQuizStatus = async () => {
+        const storedDate = await getStorage('quizDate');
+        const today = new Date().toISOString().split('T')[0];
+
+        if (storedDate === today) {
+            setIsQuiz(true);
+        } else {
+            setIsQuiz(false);
+        }
+    };
+
+    const getMission = async () => {
+        const res = await onGetMission();
+        if (res) {
+            setQuizData(res);
+        }
+    };
+
     const onGetWeather = async () => {
         const data = await onWeather();
-        if(data) {
+        if (data) {
             setWeatherData(data);
         }
-    }
+    };
 
-    const handleAnswer = (isCorrect) => {
-        setModalState(isCorrect);
-        setModalVisible(true);
+    const handleAnswer = async (data) => {
+        const res = await onMissionCheck(data, quizData.mission.missionId);
+        if (res) {
+            setModalState(true);
+            setModalVisible(true);
+        } else {
+            setModalState(false);
+            setModalVisible(true);
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        await setStorage('quizDate', today);
+        setIsQuiz(true);
     };
 
     return (
@@ -42,40 +80,40 @@ const HomePage = ({ navigation }) => {
             <Header />
             <Image style={Styles.img} source={require('../../assets/image/weather.png')} />
             <CustomText style={Styles.Top}>나주시 빛가람동의</CustomText>
-            <CustomText style={Styles.Bottom}>오늘 날씨는 맑습니다</CustomText>
+            <CustomText style={Styles.Bottom}>오늘 날씨는 비가 옵니다</CustomText>
             <CustomText style={Styles.temp}>{weatherData ? weatherData : undefined}°</CustomText>
-            <CustomText style={Styles.data}>외출하기 좋은 날이에요!</CustomText>
+            <CustomText style={Styles.data}>우비 & 우산 챙기세요!</CustomText>
             <View style={Styles.dataContainer}>
                 <View style={Styles.quizText}>
                     <Q />
                     <CustomText style={Styles.quiz}>오늘의 문제</CustomText>
                 </View>
                 <CustomText style={Styles.quizLight}>문제를 풀고 레벨을 올려보세요!</CustomText>
-                <CustomText style={Styles.q}>다음 중 한국에서 반려동물 유기 문제와 관련하여 가장 정확한 설명은?</CustomText>
+                <CustomText style={Styles.q}>{quizData ? quizData.mission.question : undefined}</CustomText>
                 <View style={Styles.btnContainer}>
                     <TouchableOpacity
                         style={Styles.btn}
-                        onPress={() => handleAnswer(false)}
+                        onPress={() => handleAnswer(quizData.mission.answer1)}
                     >
-                        <CustomText style={Styles.btnText}>2019년 기준 약 1만 5천마리이다.</CustomText>
+                        <CustomText style={Styles.btnText}>{quizData ? quizData.mission.answer1 : undefined}</CustomText>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={Styles.btn}
-                        onPress={() => handleAnswer(true)}
+                        onPress={() => handleAnswer(quizData.mission.answer2)}
                     >
-                        <CustomText style={Styles.btnText}>2019년 기준 약 13만 마리이다.</CustomText>
+                        <CustomText style={Styles.btnText}>{quizData ? quizData.mission.answer2 : undefined}</CustomText>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={Styles.btn}
-                        onPress={() => handleAnswer(false)}
+                        onPress={() => handleAnswer(quizData.mission.answer3)}
                     >
-                        <CustomText style={Styles.btnText}>유기동물 대부분은 즉시 새로운 주인에게 입양된다.</CustomText>
+                        <CustomText style={Styles.btnText}>{quizData ? quizData.mission.answer3 : undefined}</CustomText>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={Styles.btn}
-                        onPress={() => handleAnswer(false)}
+                        onPress={() => handleAnswer(quizData.mission.answer4)}
                     >
-                        <CustomText style={Styles.btnText}>유기동물 보호 시설 환경이 매우 우수하다.</CustomText>
+                        <CustomText style={Styles.btnText}>{quizData ? quizData.mission.answer4 : undefined}</CustomText>
                     </TouchableOpacity>
                 </View>
             </View>

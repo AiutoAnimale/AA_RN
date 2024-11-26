@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, TextInput, Image, TouchableOpacity, TouchableWithoutFeedback, Keyboard, StyleSheet, ScrollView } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, StyleSheet, ScrollView } from "react-native";
 import CustomText from "../../../styles/customText";
-import * as DocumentPicker from 'expo-document-picker';
 import RNPickerSelect from 'react-native-picker-select';
 import { color } from "../../../styles/theme";
 import constants from "../../../styles/constants";
 
-import ImageIcon from "../../../assets/icon/ImageIcon";
 import Back from '../../../assets/icon/Back';
 
 import onPostList from '../../../apis/PostList';
-import onCommunityPostImage from "../../../apis/PostImg";
 import onGetUser from "../../../apis/GetUserInfo";
 
 const CreatePage = ({navigation}) => {
@@ -22,8 +19,6 @@ const CreatePage = ({navigation}) => {
         emergency: "0"
     });
     const [ postState, setPostState ] = useState(false);
-    const [imageData, setImageData] = useState();
-    const formData = new FormData();
     const [ userData, setUserData ] = useState();
 
     useEffect(() => {
@@ -56,43 +51,7 @@ const CreatePage = ({navigation}) => {
         const data = await onPostList(postData);
         if(data) {
             console.log(data);
-            onImageUpload(data);
-        }
-    }
-
-    const onClickEdit = async () => {
-        try {
-            const result = await DocumentPicker.getDocumentAsync({
-                type: 'image/*',
-            });
-
-            setImageData(result.assets[0]);
-        } catch (err) {
-        }
-    }
-
-    const onImageUpload = async ( id ) => {
-        const data = {
-            uri: imageData.uri,
-            type: imageData.mimeType,
-            name: imageData.name,
-        }
-
-        if(imageData) {
-            formData.append("image", data);
-        } else {
-            formData.append("image", "");
-        }
-
-        console.log('image upload')
-
-        try {
-            const data = await onCommunityPostImage(formData, id);
-
-            if(data) {
-                navigation.navigate("CommunityMainPage", { screen: 'CommunityMainPage' });
-            }
-        } catch (error) {
+            navigation.goBack();
         }
     }
 
@@ -159,22 +118,6 @@ const CreatePage = ({navigation}) => {
                                 value: null,
                             }}
                         />
-                    </View>
-                    <View style={Styles.fontContainer}>
-                        <CustomText style={Styles.boldText}>이미지</CustomText>
-                        <CustomText style={Styles.text}>업로드된 이미지를 다시 클릭하면 삭제할 수 있습니다.</CustomText>
-                        <View style={Styles.ImageContainer}>
-                            <TouchableOpacity style={Styles.image} onPress={() => onClickEdit()}>
-                                <ImageIcon />
-                            </TouchableOpacity>
-                            {imageData ? (
-                                    <TouchableOpacity onPress={() => setImageData(null)}>
-                                        <Image style={Styles.image} source={{uri: imageData.uri}} />
-                                    </TouchableOpacity>
-                                ) : (
-                                    undefined
-                            )}
-                        </View>
                     </View>
                 </ScrollView>
             </View>
